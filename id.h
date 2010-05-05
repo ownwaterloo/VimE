@@ -31,27 +31,14 @@ enum {
 #define ID() {id_invalid}
 
 static __inline id_t
-id(void)
-{ id_t self = ID(); return self; }
-
-void
-id_dtor(id_t* self);
-
-int
-id_acquire(id_t* self);
-
-void
-id_release(id_t* self, int id);
-
-void
-id_set(id_t* self, int id, void const* data);
-
-void*
-id_get(id_t* self, int id);
-
-int
-id_get_pre(id_t* self, int id);
-
+      id         (void) { id_t self = ID(); return self; }
+void  id_dtor    (id_t*       self);
+int   id_acquire (id_t*       self);
+void  id_release (id_t*       self, int id);
+int   id_set_pre (id_t const* self, int id);
+void  id_set     (id_t*       self, int id,  void const* data);
+int   id_get_pre (id_t const* self, int id);
+void* id_get     (id_t const* self, int id);
 
 #ifdef __cplusplus
 }

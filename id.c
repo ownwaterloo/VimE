@@ -15,8 +15,7 @@ static void id_test_increase_(id_t* self) { ++self->test_.avail_; }
 static void id_test_decrease_(id_t* self) {
       assert(self->test_.avail_>0); --self->test_.avail_; }
 static void id_test_expand_(id_t* self, size_t more) {
-      assert(self->test_.avail_==0); self->test_.avail_ = more;
-}
+      assert(self->test_.avail_==0); self->test_.avail_ = more; }
 
 #else
 static void id_test_increase_(id_t* self) { }
@@ -24,7 +23,6 @@ static void id_test_decrease_(id_t* self) { }
 static void id_test_expand_(id_t* self, size_t more) {}
 
 #endif
-
 
 
 void
@@ -90,21 +88,24 @@ id_release(id_t* self, int id)
       id_test_increase_(self);
 }
 
-void
-id_set(id_t* self, int id, void const* data )
-{
-      assert( 0<= id && (size_t)id < self->count_ );
-      self->vector_[id].data_ = data;
+static int id_is_invalid(id_t const* self, int id) {
+      return 0<=id && (size_t)id < self->count_;
 }
 
 int
-id_get_pre(id_t* self, int id)
+id_set_pre(id_t const* self, int id) { return id_is_invalid(self, id); }
+int
+id_get_pre(id_t const* self, int id) { return id_is_invalid(self, id); }
+
+void
+id_set(id_t* self, int id, void const* data )
 {
-      return 0<= id && (size_t)id < self->count_;
+      assert( id_set_pre(self, id) );
+      self->vector_[id].data_ = (void*)data;
 }
 
 void*
-id_get(id_t* self, int id)
+id_get(id_t const* self, int id)
 {
       assert( id_get_pre(self, id) );
       return self->vector_[id].data_;
